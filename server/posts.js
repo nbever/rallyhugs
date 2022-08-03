@@ -1,4 +1,5 @@
 const {isValidObjectId} = require('./utils');
+const mongoose = require('mongoose');
 
 const checkName = (req, res) => {
 
@@ -52,18 +53,24 @@ const buildPostRoutes = (app, model) => {
     }
 
     let customerId = req.body.customer;
+    let customerName = req.body.customer;
 
-    if (!isValidObjectId(req.body.customer) && req.body.customer) {
-      const newCustomer = new model.Customer({name: req.body.name});
+    if (!isValidObjectId(customerId) && customerName) {
+      const newCustomer = new model.Customer({name: customerName});
       const custResponse = await newCustomer.save();
       customerId = custResponse._id;
+    }
+    else {
+      const existingCustomer = await model.Customer.findOne({_id: mongoose.Types.ObjectId(customerName)});
+      customerName = existingCustomer.name;
     }
 
     const realTags = req.body.tags.split(',');
     const realComment = {
       ...req.body,
       tags: realTags,
-      customer: customerId
+      customer: customerId,
+      customerName: customerName
     };
 
     const comment = new model.Comment(realComment);
