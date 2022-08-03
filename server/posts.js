@@ -13,14 +13,15 @@ const checkName = (req, res) => {
 
 const buildPostRoutes = (app, model) => {
 
+  const {Tag, Customer, User} = model;
+
   app.post('/api/tag', async (req, res) => {
 
     if (!checkName(req,res)) {
       return;
     }
     
-    const newTag = new model.Tag(req.body);
-    const result = await newTag.save();
+    const result = await Tag.updateOne({name: req.body.name}, req.body, {upsert: true});
     res.status(200).end();
   });
 
@@ -30,8 +31,7 @@ const buildPostRoutes = (app, model) => {
       return;
     }
 
-    const newCustomer = new model.Customer(req.body);
-    const result = await newCustomer.save();
+    const result = await Customer.updateOne({name: req.body.name}, req.body, {upsert: true});
     res.status(200).end();
   });
 
@@ -41,8 +41,7 @@ const buildPostRoutes = (app, model) => {
       return;
     }
 
-    const newUser = new model.User(req.body);
-    const result = await newUser.save();
+    const result = await User.updateOne({name: req.body.name}, req.body, {upsert: true});
     res.status(200).end();
   });
 
