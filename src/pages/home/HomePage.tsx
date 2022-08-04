@@ -4,7 +4,7 @@ import { Page } from 'layout/Page';
 
 const HomePage: React.FC = () => {
   return (
-    <Page title="Home" data-testid="homePage">
+    <Page title="Home">
       <Typography paragraph>
         Some recent random customer hugs
       </Typography>

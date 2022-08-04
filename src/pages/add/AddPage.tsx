@@ -40,7 +40,7 @@ const AddPage: React.FC = () => {
   };
 
   return (
-    <Page title="Add Feedback" data-testid="homePage">
+    <Page title="Add Feedback">
       <Box sx={{ width: '60ch' }}>
         <Box>
           <TextField
