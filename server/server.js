@@ -40,7 +40,7 @@ app.get('/api/comments', async (req, res) => {
   const tags = req.query?.tags?.split(',');
   const customers = req.query?.customers?.split(',');
 
-  const query = {date: { $gt: 16594785741, $lt: 1659479574117 }};
+  const query = {};//{date: { $gt: 16594785741, $lt: 2659479574117 }};
 
   if (customers) {
     query.customer = {$in: customers};

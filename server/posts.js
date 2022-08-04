@@ -55,7 +55,7 @@ const buildPostRoutes = (app, model) => {
     let customerName = req.body.customer;
 
     if (!isValidObjectId(customerId) && customerName) {
-      const newCustomer = new model.Customer({name: customerName});
+      const newCustomer = new model.Customer({name: customerName.trim()});
       const custResponse = await newCustomer.save();
       customerId = custResponse._id;
     }
@@ -74,7 +74,7 @@ const buildPostRoutes = (app, model) => {
         continue;
       }
 
-      await Tag.updateOne({name: tag}, {name: tag}, {upsert: true});
+      await Tag.updateOne({name: tag}, {name: tag.trim()}, {upsert: true});
     }
 
     const realComment = {

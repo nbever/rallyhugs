@@ -32,18 +32,30 @@ const ApiContextProvider = ({children}: {children: React.ReactNode}) => {
 
   const genericFetch = (path: URL, method: String = 'GET') => {
     return async (body: Object = null) => {
-      const users = await fetchJson(path, {
+      const items = await fetchJson(path, {
         body,
         method
       });
-      return users;
+      return items;
     };
   };
 
   const api = {
     getUsers: genericFetch(GET_USERS),
     getCustomers: genericFetch(GET_CUSTOMERS),
-    getComments: genericFetch(GET_COMMENTS),
+    getComments: async (tags: Array<String>, customers: Array<String>, start: Date, end: Date, user: String) => {
+
+      const customerString = (customers && customers.length > 0) ? customers.join(',') : '';
+      const tagString = (tags && tags.length > 0) ? tags.join(',') : '';
+
+      const queryString = `?tags=${tagString}&customers=${customerString}&start=${start.getTime()}` +
+        `&end=${end.getTime()}&user=${user}`;
+      const comments = await fetchJson(`${GET_COMMENTS}${queryString}`, {
+        method: 'GET'
+      });
+
+      return comments;
+    },
     getTags: genericFetch(GET_TAGS),
     addTag: genericFetch(TAG, 'POST'),
     addComment: genericFetch(COMMENT, 'POST'),
