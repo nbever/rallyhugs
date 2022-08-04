@@ -1,13 +1,24 @@
-import {useState, MouseEvent} from 'react';
+import {useState, useEffect, MouseEvent} from 'react';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mineral/core'
 
 import {UserType, useUser} from './context/UserContext';
+import {useApi} from './context/ApiContext';
 
 const UserDialog = () => {
 
   const {setUser, user} = useUser();
   const [userText, setUserText] = useState<String>('');
+  const {getUsers} = useApi();
+
+  const refreshUsers = async (): Promise<any> => {
+    const users = await getUsers();
+    console.log(JSON.stringify(users));
+  };
+
+  useEffect(() => {
+    refreshUsers();
+  }, []);
 
   const handleInput = ($e: MouseEvent) => {
     if (!userText || userText === '') {

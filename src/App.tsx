@@ -4,6 +4,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { MultiThemeProvider } from '@mineral/core';
 
 import { UserContextProvider } from 'context/UserContext';
+import { ApiContextProvider } from 'context/ApiContext';
 import { Router } from 'layout/Router';
 import { ErrorBoundary } from 'layout/ErrorBoundary';
 
@@ -12,10 +13,12 @@ import UserDialog from './UserDialog';
 export const AppPlain: React.FC = () => (
   <HelmetProvider>
     <ErrorBoundary>
-      <UserContextProvider>
-        <UserDialog />
-        <Router />
-      </UserContextProvider>
+      <ApiContextProvider>
+        <UserContextProvider>
+          <UserDialog />
+          <Router />
+        </UserContextProvider>
+      </ApiContextProvider>
     </ErrorBoundary>
   </HelmetProvider>
 );
