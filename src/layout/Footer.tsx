@@ -17,7 +17,7 @@ export const Footer: React.FC = () => (
         <BroadcomLogo sx={{ display: 'flex', height: 24, width: 175 }} />
       </FooterLink>
     }
-    title="Mineral CRA v0.1.0">
+    title="Rally Hugs">
     <FooterLink href="https://www.broadcom.com/company/legal/cookie-policy">
       Cookie Policy
     </FooterLink>
