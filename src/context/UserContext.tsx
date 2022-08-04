@@ -1,19 +1,23 @@
-import {createContext, useContext, useState} from 'react';
+import { createContext, useContext, useState } from 'react';
+import { useLocalStorage } from 'utils/useLocalStorage';
 
-type UserType = {name: String, icon: String, color: String};
+type UserType = { name: String; icon: String; color: String };
 
-const UserContext = createContext<{user: UserType, setUser: (user: UserType) => void} | undefined>(undefined);
+const UserContext = createContext<
+  { user: UserType; setUser: (user: UserType) => void } | undefined
+>(undefined);
 
-const UserContextProvider = ({children}: {children: React.ReactNode}) => {
-
-  const [user, internalSetUser] = useState<UserType>(null);
+const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
+  const [savedUser, setSavedUser] = useLocalStorage<UserType>('user', null);
+  const [user, internalSetUser] = useState<UserType>(savedUser);
 
   const setUser = (suggestedUser: UserType) => {
     internalSetUser(suggestedUser);
+    setSavedUser(suggestedUser);
   };
 
   return (
-    <UserContext.Provider value={{user, setUser}}>
+    <UserContext.Provider value={{ user, setUser }}>
       {children}
     </UserContext.Provider>
   );
@@ -24,5 +28,4 @@ const useUser = () => {
   return userContext;
 };
 
-export {useUser, UserType, UserContextProvider};
-
+export { useUser, UserType, UserContextProvider };

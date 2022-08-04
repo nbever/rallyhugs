@@ -10,10 +10,9 @@ import {
 
 import { useUser } from 'context/UserContext';
 
-// Based on https://material-ui.com/components/menus/#simple-menu
 export const UserMenu: React.FC = () => {
-  const userContext = useUser();
-  const userName = userContext.user?.name || '?';
+  const { user, setUser } = useUser();
+  const userName = user?.name || '?';
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const menuId = 'user-menu';
@@ -24,6 +23,11 @@ export const UserMenu: React.FC = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const switchUser = () => {
+    setUser(null);
+    handleClose();
   };
 
   return (
@@ -72,11 +76,8 @@ export const UserMenu: React.FC = () => {
             primary={userName}
           />
         </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <ListItemText primary="Profile" />
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <ListItemText primary="Logout" />
+        <MenuItem onClick={switchUser}>
+          <ListItemText primary="Switch User" />
         </MenuItem>
       </Menu>
     </>
