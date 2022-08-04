@@ -46,13 +46,12 @@ module.exports = {
     port: 9000,
     compress: true,
     historyApiFallback: true,
-    // proxy: {
-    //   '/api': {
-    //     secure: false,
-    //     target: 'http://localhost:3000',
-    //     pathRewrite: { '^/api': '' }
-    //   }
-    // }
+    proxy: {
+      '/api': {
+        secure: false,
+        target: 'http://localhost:9999'
+      }
+    }
   },
   plugins: [
     new HtmlWebpackPlugin({
