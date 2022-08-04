@@ -50,7 +50,7 @@ const ApiContextProvider = ({children}: {children: React.ReactNode}) => {
 
       const queryString = `?tags=${tagString}&customers=${customerString}&start=${start.getTime()}` +
         `&end=${end.getTime()}&user=${user}`;
-      const comments = await fetchJson(`${GET_COMMENTS}${queryString}`, {
+      const comments = await fetchJson(new URL(`${GET_COMMENTS}${queryString}`, window.location.host), {
         method: 'GET'
       });
 
