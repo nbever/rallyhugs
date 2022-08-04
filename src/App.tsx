@@ -1,51 +1,31 @@
-import {useEffect} from 'react';
+import * as React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
+import { MultiThemeProvider } from '@mineral/core';
 
-import Home from './Home';
-import AddPage from './add/AddPage';
-import TagPage from './tags/TagPage';
-import CustomerPage from './customers/CustomerPage';
-import UserPage from './users/UserPage';
-import SearchPage from './search/SearchPage';
-import Banner from './Banner';
+import { UserContextProvider } from 'context/UserContext';
+import { Router } from 'layout/Router';
+import { ErrorBoundary } from 'layout/ErrorBoundary';
+
 import UserDialog from './UserDialog';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 
-import {grow, full} from './styles';
+export const AppPlain: React.FC = () => (
+  <HelmetProvider>
+    <ErrorBoundary>
+      <UserContextProvider>
+        <UserDialog />
+        <Router />
+      </UserContextProvider>
+    </ErrorBoundary>
+  </HelmetProvider>
+);
 
-import {useUser} from './context/UserContext';
-
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-} from 'react-router-dom';
-
-const appPane = {
-  display: 'flex',
-  flexDirection: 'column'
-};
-
-function App() {
-
+export const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <UserDialog />
-      <Box sx={appPane}>
-        <Banner />
-        <Box sx={{...grow, ...full}}>
-          <Routes>
-            <Route path="/tags" element={<TagPage/>} />
-            <Route path="/search" element={<SearchPage/>} />
-            <Route path="/customers" element={<CustomerPage/>} />
-            <Route path="/users" element={<UserPage/>} />
-            <Route path="/add" element={<AddPage />} />
-            <Route path="/" element={<Home />} />
-          </Routes>
-        </Box>
-      </Box>
+      <MultiThemeProvider>
+        <AppPlain />
+      </MultiThemeProvider>
     </BrowserRouter>
   );
-}
-
-export default App;
+};

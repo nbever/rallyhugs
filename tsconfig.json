@@ -1,14 +1,16 @@
 {
   "include": ["./custom.d.ts"],
   "compilerOptions": {
+    "baseUrl": "./src",
     "outDir": "./dist/",
-    "noImplicitAny": true,
     "sourceMap": true,
-    "module": "es6",
+    "skipLibCheck": true,
     "target": "es5",
     "jsx": "react-jsx",
     "allowJs": true,
+    "module": "esnext",
     "moduleResolution": "node",
-    "types": ["react/next", "react-dom/next"]
-  }
+    "types": ["react/next", "react-dom/next", "node"]
+  },
+  "include": ["src"]
 }

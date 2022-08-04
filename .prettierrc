@@ -1,0 +1,6 @@
+{
+  "proseWrap": "never",
+  "singleQuote": true,
+  "trailingComma": "all",
+  "bracketSameLine": true
+}

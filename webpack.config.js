@@ -2,8 +2,11 @@ const path = require('path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const srcPath = path.join(__dirname, 'src');
+
 module.exports = {
-  entry: './src/index.tsx',
+  context: srcPath,
+  entry: 'index.tsx',
   devtool: 'inline-source-map',
   module: {
     rules: [
@@ -18,19 +21,20 @@ module.exports = {
           {
             loader: 'url-loader',
             options: {
-              limit: 8192
-            }
-          }
-        ]
+              limit: 8192,
+            },
+          },
+        ],
       },
       {
         test: /\.svg$/i,
         issuer: /\.[jt]sx?$/,
         use: ['@svgr/webpack'],
-      }
+      },
     ],
   },
   resolve: {
+    modules: [srcPath, 'node_modules'],
     extensions: ['.tsx', '.ts', '.js'],
   },
   output: {
@@ -41,7 +45,7 @@ module.exports = {
     compress: true,
     port: 9000,
     compress: true,
-    historyApiFallback: true
+    historyApiFallback: true,
     // proxy: {
     //   '/api': {
     //     secure: false,
@@ -54,7 +58,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'Rally Hugs',
       template: 'index.html.ejs',
-      favicon: 'assets/rally_onion.svg'
-    })
-  ]
+      favicon: 'assets/rally_onion.svg',
+    }),
+  ],
 };

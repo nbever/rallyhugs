@@ -1,11 +1,6 @@
 import {useState, MouseEvent} from 'react';
 
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import Button from '@mui/material/Button';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mineral/core'
 
 import {UserType, useUser} from './context/UserContext';
 
@@ -33,7 +28,6 @@ const UserDialog = () => {
           label="Who Are You?"
           type="text"
           fullWidth
-          variant="standard"
           value={userText}
           onChange={($e) => setUserText($e.target.value)}
         />
