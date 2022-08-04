@@ -1,8 +1,8 @@
-import {createContext, useContext, useState} from 'react';
-import {UserType} from './UserContext';
+import { createContext, useContext } from 'react';
 
 type ApiDefType = {
-  getUsers: () => Promise<any>
+  getUsers: () => Promise<any>;
+  addComment: (any) => Promise<any>;
 };
 
 const API = '/api';
@@ -28,13 +28,12 @@ const fetchJson = async (resource: URL, options) => {
 
 const ApiContext = createContext<ApiDefType | undefined>(undefined);
 
-const ApiContextProvider = ({children}: {children: React.ReactNode}) => {
-
+const ApiContextProvider = ({ children }: { children: React.ReactNode }) => {
   const genericFetch = (path: URL, method: String = 'GET') => {
     return async (body: Object = null) => {
       const items = await fetchJson(path, {
         body,
-        method
+        method,
       });
       return items;
     };
@@ -43,16 +42,26 @@ const ApiContextProvider = ({children}: {children: React.ReactNode}) => {
   const api = {
     getUsers: genericFetch(GET_USERS),
     getCustomers: genericFetch(GET_CUSTOMERS),
-    getComments: async (tags: Array<String>, customers: Array<String>, start: Date, end: Date, user: String) => {
+    getComments: async (
+      tags: Array<String>,
+      customers: Array<String>,
+      start: Date,
+      end: Date,
+      user: String,
+    ) => {
+      const customerString =
+        customers && customers.length > 0 ? customers.join(',') : '';
+      const tagString = tags && tags.length > 0 ? tags.join(',') : '';
 
-      const customerString = (customers && customers.length > 0) ? customers.join(',') : '';
-      const tagString = (tags && tags.length > 0) ? tags.join(',') : '';
-
-      const queryString = `?tags=${tagString}&customers=${customerString}&start=${start.getTime()}` +
+      const queryString =
+        `?tags=${tagString}&customers=${customerString}&start=${start.getTime()}` +
         `&end=${end.getTime()}&user=${user}`;
-      const comments = await fetchJson(new URL(`${GET_COMMENTS}${queryString}`, window.location.host), {
-        method: 'GET'
-      });
+      const comments = await fetchJson(
+        new URL(`${GET_COMMENTS}${queryString}`, window.location.host),
+        {
+          method: 'GET',
+        },
+      );
 
       return comments;
     },
@@ -60,14 +69,10 @@ const ApiContextProvider = ({children}: {children: React.ReactNode}) => {
     addTag: genericFetch(TAG, 'POST'),
     addComment: genericFetch(COMMENT, 'POST'),
     addCustomer: genericFetch(CUSTOMER, 'POST'),
-    addUser: genericFetch(USER, 'POST')
+    addUser: genericFetch(USER, 'POST'),
   };
 
-  return (
-    <ApiContext.Provider value={api}>
-      {children}
-    </ApiContext.Provider>
-  );
+  return <ApiContext.Provider value={api}>{children}</ApiContext.Provider>;
 };
 
 const useApi = () => {
@@ -75,5 +80,4 @@ const useApi = () => {
   return apiContext;
 };
 
-export {useApi, ApiDefType, ApiContextProvider};
-
+export { useApi, ApiDefType, ApiContextProvider };
