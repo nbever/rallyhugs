@@ -65,6 +65,18 @@ const buildPostRoutes = (app, model) => {
     }
 
     const realTags = req.body.tags.split(',');
+
+    // sequnetial processing desired.
+    for (let i = 0; i < realTags.length; i++ ) {
+      const tag = realTags[i];
+
+      if (!tag) {
+        continue;
+      }
+
+      await Tag.updateOne({name: tag}, {name: tag}, {upsert: true});
+    }
+
     const realComment = {
       ...req.body,
       tags: realTags,
