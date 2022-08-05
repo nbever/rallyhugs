@@ -50,7 +50,7 @@ const buildPostRoutes = (app, model) => {
     let tempName = aName;
 
     if (!isValidObjectId(tempId) && tempName) {
-      const newThing = await aModel.findOneAndUpdate({name: tempName}, {name: tempName}, {upsert: true});
+      const newThing = await aModel.findOneAndUpdate({name: tempName}, {name: tempName}, {upsert: true, new: true});
       tempId = newThing._doc._id;
     }
     else {
