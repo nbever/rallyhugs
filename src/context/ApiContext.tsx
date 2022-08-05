@@ -32,8 +32,11 @@ const ApiContextProvider = ({ children }: { children: React.ReactNode }) => {
   const genericFetch = (path: URL, method: String = 'GET') => {
     return async (body: Object = null) => {
       const items = await fetchJson(path, {
-        body,
+        body: JSON.stringify(body),
         method,
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
       return items;
     };

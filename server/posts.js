@@ -45,24 +45,37 @@ const buildPostRoutes = (app, model) => {
     res.status(200).end();
   });
 
+  const createOrFind = async (anId, aName, aModel) => {
+    let tempId = anId;
+    let tempName = aName;
+
+    if (!isValidObjectId(tempId) && tempName) {
+      const newThing = await aModel.findOneAndUpdate({name: tempName}, {name: tempName}, {upsert: true});
+      tempId = newThing._doc._id;
+    }
+    else {
+      const existingThing = await aModel.findOne({_id: mongoose.Types.ObjectId(tempName)});
+      tempName = existingThing.name;
+      tempId = existingThing._id;
+    }
+
+    return {
+      _id: tempId,
+      name: tempName
+    };
+  };
+
   app.post('/api/comment', async (req, res) => {
     if (!req.body.comment) {
       res.status(400).send('Bad Request');
       return;
     }
 
-    let customerId = req.body.customer;
-    let customerName = req.body.customer;
+    const customerDetails = await createOrFind(req.body.customer, req.body.customer, model.Customer);
+    const {_id: customerId, name: customerName} = customerDetails;
 
-    if (!isValidObjectId(customerId) && customerName) {
-      const newCustomer = new model.Customer({name: customerName.trim()});
-      const custResponse = await newCustomer.save();
-      customerId = custResponse._id;
-    }
-    else {
-      const existingCustomer = await model.Customer.findOne({_id: mongoose.Types.ObjectId(customerName)});
-      customerName = existingCustomer.name;
-    }
+    const userDetails = await createOrFind(req.body.user, req.body.user, model.User);
+    const {_id: userId, name: userName} = userDetails;
 
     const realTags = req.body.tags.split(',');
 
@@ -79,6 +92,8 @@ const buildPostRoutes = (app, model) => {
 
     const realComment = {
       ...req.body,
+      user: userId,
+      userName: userName,
       tags: realTags,
       customer: customerId,
       customerName: customerName

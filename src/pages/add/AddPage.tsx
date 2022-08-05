@@ -34,7 +34,7 @@ const AddPage: React.FC = () => {
   const submit = () => {
       const jsonString = JSON.stringify({ ...formValues, user: user.name });
       console.log(jsonString);
-    api.addComment(jsonString).then((res) => {
+    api.addComment({ ...formValues, user: user.name }).then((res) => {
         console.log('response', res);
     });
   };
