@@ -66,11 +66,11 @@ app.get('/api/comments', async (req, res) => {
     query.positive = {};
 
     if (ratingMax) {
-      query.positive.$lt = ratingMax;
+      query.positive.$lte = ratingMax;
     }
 
     if (ratingMin) {
-      query.positive.$gt = ratingMin;
+      query.positive.$gte = ratingMin;
     }
   }
 
