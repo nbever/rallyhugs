@@ -39,8 +39,14 @@ app.get('/api/comments', async (req, res) => {
   const {start, end, user} = req.query;
   const tags = req.query?.tags?.split(',');
   const customers = req.query?.customers?.split(',');
+  const ratingMax = parseInt(req.query?.ratingMax);
+  const ratingMin = parseInt(req.query?.ratingMin);
 
-  const query = {};//{date: { $gt: 16594785741, $lt: 2659479574117 }};
+  const query = {};
+
+  if (start && end) {
+    query.date = { $gt: start, $lt: end };
+  }
 
   if (customers) {
     query.customer = {$in: customers};
@@ -48,6 +54,18 @@ app.get('/api/comments', async (req, res) => {
 
   if (tags) {
     query.tags = {$in: tags};
+  }
+
+  if (ratingMax || ratingMin) {
+    query.positive = {};
+
+    if (ratingMax) {
+      query.positive.$lt = ratingMax;
+    }
+
+    if (ratingMin) {
+      query.positive.$gt = ratingMin;
+    }
   }
 
   const comments = await model.Comment.find(query).exec();

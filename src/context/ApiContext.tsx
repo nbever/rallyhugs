@@ -51,6 +51,8 @@ const ApiContextProvider = ({ children }: { children: React.ReactNode }) => {
       start: Date,
       end: Date,
       user: String,
+      ratingMin: Number,
+      ratingMax: Number
     ) => {
       const customerString =
         customers && customers.length > 0 ? customers.join(',') : '';
@@ -58,7 +60,7 @@ const ApiContextProvider = ({ children }: { children: React.ReactNode }) => {
 
       const queryString =
         `?tags=${tagString}&customers=${customerString}&start=${start.getTime()}` +
-        `&end=${end.getTime()}&user=${user}`;
+        `&end=${end.getTime()}&user=${user}&ratingMin=${ratingMin}&ratingMax=${ratingMax}`;
       const comments = await fetchJson(
         new URL(`${GET_COMMENTS}${queryString}`, window.location.host),
         {
