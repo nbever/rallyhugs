@@ -14,6 +14,7 @@ const GET_USERS: URL = buildUrl('/users');
 const GET_CUSTOMERS: URL = buildUrl('/customers');
 const GET_COMMENTS: URL = buildUrl('/comments');
 const GET_TAGS: URL = buildUrl('/tags');
+const GET_RANDOM_COMMENT: URL = buildUrl('/comment/random');
 
 const TAG: URL = buildUrl('/tag');
 const CUSTOMER: URL = buildUrl('/customer');
@@ -45,6 +46,7 @@ const ApiContextProvider = ({ children }: { children: React.ReactNode }) => {
   const api = {
     getUsers: genericFetch(GET_USERS),
     getCustomers: genericFetch(GET_CUSTOMERS),
+    getRandomComment: genericFetch(GET_RANDOM_COMMENT),
     getComments: async (
       tags: Array<String>,
       customers: Array<String>,

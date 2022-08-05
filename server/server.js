@@ -34,6 +34,12 @@ app.get('/api/users', async (req, res) => {
   res.send(users);
 });
 
+app.get('/api/comment/random', async (req, res) => {
+
+  const randomComment = await model.Comment.aggregate([{ $sample: {size: 1}}]);
+  res.send(randomComment);
+});
+
 app.get('/api/comments', async (req, res) => {
 
   const {start, end, user} = req.query;
