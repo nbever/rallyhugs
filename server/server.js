@@ -50,8 +50,16 @@ app.get('/api/comments', async (req, res) => {
 
   const query = {};
 
-  if (start && end) {
-    query.date = { $gt: start, $lt: end };
+  if (start || end) {
+    query.date = {};
+
+    if (start) {
+      query.date.$gte = start;
+    }
+
+    if (end) {
+      query.date.$lte = end;
+    }
   }
 
   if (customers) {
