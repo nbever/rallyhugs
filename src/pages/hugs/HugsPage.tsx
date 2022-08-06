@@ -47,7 +47,7 @@ const columns = [
   { field: 'customerName', headerName: 'Customer', width: 180 },
   {
     field: 'date',
-    headerName: 'Date Created',
+    headerName: 'Date',
     type: 'date',
     width: 180,
   },

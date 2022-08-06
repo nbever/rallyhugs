@@ -1,9 +1,17 @@
 import * as React from 'react';
-import { Box, Button, TextField } from '@mineral/core';
-import { Page } from 'layout/Page';
+import {
+  Stack,
+  Box,
+  Button,
+  TextField,
+  Snackbar,
+  Alert,
+  AlertColor,
+} from '@mineral/core';
 import { DatePicker } from '@mineral/date-pickers';
-import { useApi } from '../../context/ApiContext';
-import { useUser } from '../../context/UserContext';
+import { useApi } from 'context/ApiContext';
+import { useUser } from 'context/UserContext';
+import { Page } from 'layout/Page';
 
 const defaultFormValues = {
   customer: '',
@@ -13,6 +21,22 @@ const defaultFormValues = {
   comment: '',
 };
 const AddPage: React.FC = () => {
+  const [alertState, setAlertState] = React.useState<{
+    open: boolean;
+    severity: AlertColor;
+  }>({ open: false, severity: 'success' });
+
+  const closeAlert = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setAlertState({ ...alertState, open: false });
+  };
+
   const [formValues, setFormValues] = React.useState<{
     date: Date;
     customer: String;
@@ -32,16 +56,14 @@ const AddPage: React.FC = () => {
   };
 
   const submit = () => {
-      const jsonString = JSON.stringify({ ...formValues, user: user.name });
-      console.log(jsonString);
-    api.addComment({ ...formValues, user: user.name }).then((res) => {
-        console.log('response', res);
+    api.addComment({ ...formValues, user: user.name }).then(() => {
+      setAlertState({ ...alertState, open: true });
     });
   };
 
   return (
-    <Page title="Add Feedback">
-      <Box sx={{ width: '60ch' }}>
+    <Page title="Add Hugs">
+      <Stack direction="column" spacing={2} sx={{ width: '60ch' }}>
         <Box>
           <TextField
             label="Customer"
@@ -49,7 +71,6 @@ const AddPage: React.FC = () => {
             value={formValues.customer}
             onChange={handleInputChange}
             fullWidth
-            margin="normal"
           />
         </Box>
         <Box>
@@ -60,7 +81,7 @@ const AddPage: React.FC = () => {
               setFormValues({ ...formValues, date: value });
             }}
             renderInput={(params) => (
-              <TextField name="date" {...params} fullWidth margin="normal" />
+              <TextField name="date" {...params} fullWidth />
             )}
           />
         </Box>
@@ -71,7 +92,6 @@ const AddPage: React.FC = () => {
             value={formValues.positive}
             onChange={handleInputChange}
             fullWidth
-            margin="normal"
           />
         </Box>
         <Box>
@@ -81,7 +101,6 @@ const AddPage: React.FC = () => {
             value={formValues.tags}
             onChange={handleInputChange}
             fullWidth
-            margin="normal"
           />
         </Box>
         <Box>
@@ -93,7 +112,6 @@ const AddPage: React.FC = () => {
             multiline
             rows="5"
             fullWidth
-            margin="normal"
           />
         </Box>
         <Box>
@@ -101,7 +119,19 @@ const AddPage: React.FC = () => {
             Submit
           </Button>
         </Box>
-      </Box>
+      </Stack>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={alertState.open}
+        autoHideDuration={6000}
+        onClose={closeAlert}>
+        <Alert
+          onClose={closeAlert}
+          severity={alertState.severity}
+          sx={{ width: '100%' }}>
+          Hug successfully delivered!
+        </Alert>
+      </Snackbar>
     </Page>
   );
 };

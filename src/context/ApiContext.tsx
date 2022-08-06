@@ -35,6 +35,10 @@ const USER: URL = buildUrl('/user');
 
 const fetchJson = async (resource: URL, options) => {
   const response = await fetch(resource, options);
+  if (options.method === 'POST') {
+    return response;
+  }
+
   const json = await response.json();
   return json;
 };
