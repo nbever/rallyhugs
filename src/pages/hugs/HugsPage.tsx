@@ -28,7 +28,7 @@ export default function HugsPage() {
   }
 
   return (
-    <Page title="Search">
+    <Page title="Rally Hugs">
       <DataGridPro
         components={{
           Toolbar: GridToolbar,
