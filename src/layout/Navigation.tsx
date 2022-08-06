@@ -3,9 +3,10 @@ import { NavLink, NavLinkProps } from 'react-router-dom';
 import {
   Home as HomeIcon,
   Tag as TagIcon,
-  User as CustomerIcon,
-  MagnifyingGlass as SearchIcon,
+  User as UserIcon,
+  Health as HugsIcon,
   Plus as AddIcon,
+  Building as CustomerIcon,
 } from '@mineral/icons';
 import {
   Divider,
@@ -37,7 +38,7 @@ export const Navigation: React.FC = () => (
   <SideNavMenu>
     <SideNavMenuLink label="Home" to="/" icon={<HomeIcon />} />
     <SideNavMenuLink label="Add" to="/add" icon={<AddIcon />} />
-    <SideNavMenuLink label="Search" to="/search" icon={<SearchIcon />} />
+    <SideNavMenuLink label="Hugs" to="/hugs" icon={<HugsIcon />} />
     <Divider />
     <SideNavMenuLink
       label="Customers"
@@ -45,5 +46,6 @@ export const Navigation: React.FC = () => (
       icon={<CustomerIcon />}
     />
     <SideNavMenuLink label="Tags" to="/tags" icon={<TagIcon />} />
+    <SideNavMenuLink label="Users" to="/users" icon={<UserIcon />} />
   </SideNavMenu>
 );

@@ -1,17 +1,28 @@
-import * as React from 'react';
 import { DataGridPro } from '@mineral/datagrid';
-import {
-  randomCreatedDate,
-  randomUserName,
-  randomColor,
-} from '@mui/x-data-grid-generator';
+import * as React from 'react';
 import { Page } from 'layout/Page';
+import { useEffect, useState } from 'react';
+import { useApi } from 'context/ApiContext';
 
-export default function BasicEditingGrid() {
+export default function TagPage() {
+  const [data, setData] = useState(null);
+  const { getTags } = useApi();
+
+  useEffect(() => {
+    getTags().then((tags) => {
+      tags.forEach((tag) => (tag.id = tag._id));
+      setData(tags);
+    });
+  }, []);
+
+  if (!data) {
+    return null;
+  }
+
   return (
     <Page title="Tags">
       <DataGridPro
-        rows={rows}
+        rows={data}
         columns={columns}
         experimentalFeatures={{ newEditingApi: true }}
       />
@@ -20,45 +31,5 @@ export default function BasicEditingGrid() {
 }
 
 const columns = [
-  { field: 'name', headerName: 'Name', width: 180, editable: true },
-  { field: 'color', headerName: 'Color' },
-  {
-    field: 'dateCreated',
-    headerName: 'Date Created',
-    type: 'date',
-    width: 180,
-  },
-];
-
-const rows = [
-  {
-    id: 1,
-    name: randomUserName(),
-    color: randomColor(),
-    dateCreated: randomCreatedDate(),
-  },
-  {
-    id: 2,
-    name: randomUserName(),
-    color: randomColor(),
-    dateCreated: randomCreatedDate(),
-  },
-  {
-    id: 3,
-    name: randomUserName(),
-    color: randomColor(),
-    dateCreated: randomCreatedDate(),
-  },
-  {
-    id: 4,
-    name: randomUserName(),
-    color: randomColor(),
-    dateCreated: randomCreatedDate(),
-  },
-  {
-    id: 5,
-    name: randomUserName(),
-    color: randomColor(),
-    dateCreated: randomCreatedDate(),
-  },
+  { field: 'name', headerName: 'Name', width: 600, editable: true },
 ];

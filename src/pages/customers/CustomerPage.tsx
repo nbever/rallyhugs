@@ -1,16 +1,27 @@
-import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { DataGridPro } from '@mineral/datagrid';
-import {
-  randomCreatedDate,
-  randomCompanyName,
-} from '@mui/x-data-grid-generator';
 import { Page } from 'layout/Page';
+import { useApi } from 'context/ApiContext';
 
-export default function BasicEditingGrid() {
+export default function CustomerPage() {
+  const [data, setData] = useState(null);
+  const { getCustomers } = useApi();
+
+  useEffect(() => {
+    getCustomers().then((customers) => {
+      customers.forEach((customer) => (customer.id = customer._id));
+      setData(customers);
+    });
+  }, []);
+
+  if (!data) {
+    return null;
+  }
+
   return (
     <Page title="Customers">
       <DataGridPro
-        rows={rows}
+        rows={data}
         columns={columns}
         experimentalFeatures={{ newEditingApi: true }}
       />
@@ -19,39 +30,5 @@ export default function BasicEditingGrid() {
 }
 
 const columns = [
-  { field: 'name', headerName: 'Name', width: 180, editable: true },
-  {
-    field: 'dateCreated',
-    headerName: 'Date Created',
-    type: 'date',
-    width: 180,
-  },
-];
-
-const rows = [
-  {
-    id: 1,
-    name: randomCompanyName(),
-    dateCreated: randomCreatedDate(),
-  },
-  {
-    id: 2,
-    name: randomCompanyName(),
-    dateCreated: randomCreatedDate(),
-  },
-  {
-    id: 3,
-    name: randomCompanyName(),
-    dateCreated: randomCreatedDate(),
-  },
-  {
-    id: 4,
-    name: randomCompanyName(),
-    dateCreated: randomCreatedDate(),
-  },
-  {
-    id: 5,
-    name: randomCompanyName(),
-    dateCreated: randomCreatedDate(),
-  },
+  { field: 'name', headerName: 'Name', width: 600, editable: true },
 ];

@@ -1,7 +1,19 @@
 import { createContext, useContext } from 'react';
 
+type CommentFilterType = {
+  tags: Array<String>;
+  customers: Array<String>;
+  start: Date;
+  end: Date;
+  user: String;
+  ratingMin: Number;
+  ratingMax: Number;
+};
 type ApiDefType = {
   getUsers: () => Promise<any>;
+  getCustomers: () => Promise<any>;
+  getComments: (CommentFilterType) => Promise<any>;
+  getTags: () => Promise<any>;
   addComment: (any) => Promise<any>;
 };
 
@@ -31,15 +43,18 @@ const ApiContext = createContext<ApiDefType | undefined>(undefined);
 
 const ApiContextProvider = ({ children }: { children: React.ReactNode }) => {
   const genericFetch = (path: URL, method: String = 'GET') => {
-    return async (body: Object = null) => {
-      const items = await fetchJson(path, {
+    return (body: Object = null) => {
+      const options = {
         body: JSON.stringify(body),
         method,
         headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      return items;
+          'Content-Type': 'application/json',
+        },
+      };
+      if (method === 'GET') {
+        delete options.body;
+      }
+      return fetchJson(path, options);
     };
   };
 
@@ -47,30 +62,16 @@ const ApiContextProvider = ({ children }: { children: React.ReactNode }) => {
     getUsers: genericFetch(GET_USERS),
     getCustomers: genericFetch(GET_CUSTOMERS),
     getRandomComment: genericFetch(GET_RANDOM_COMMENT),
-    getComments: async (
-      tags: Array<String>,
-      customers: Array<String>,
-      start: Date,
-      end: Date,
-      user: String,
-      ratingMin: Number,
-      ratingMax: Number
-    ) => {
-      const customerString =
-        customers && customers.length > 0 ? customers.join(',') : '';
-      const tagString = tags && tags.length > 0 ? tags.join(',') : '';
-
-      const queryString =
-        `?tags=${tagString}&customers=${customerString}&start=${start.getTime()}` +
-        `&end=${end.getTime()}&user=${user}&ratingMin=${ratingMin}&ratingMax=${ratingMax}`;
-      const comments = await fetchJson(
-        new URL(`${GET_COMMENTS}${queryString}`, window.location.host),
+    getComments: (filters: CommentFilterType) => {
+      return fetchJson(
+        new URL(
+          `${GET_COMMENTS}?${filtersToQueryString(filters)}`,
+          window.location.host,
+        ),
         {
           method: 'GET',
         },
       );
-
-      return comments;
     },
     getTags: genericFetch(GET_TAGS),
     addTag: genericFetch(TAG, 'POST'),
@@ -81,6 +82,42 @@ const ApiContextProvider = ({ children }: { children: React.ReactNode }) => {
 
   return <ApiContext.Provider value={api}>{children}</ApiContext.Provider>;
 };
+
+function filtersToQueryString({
+  customers,
+  tags,
+  start,
+  end,
+  user,
+  ratingMin,
+  ratingMax,
+}: CommentFilterType) {
+  const qsPieces = [];
+
+  if (customers?.length > 0) {
+    qsPieces.push(`customers=${customers.join(',')}`);
+  }
+  if (tags?.length > 0) {
+    qsPieces.push(`tags=${tags.join(',')}`);
+  }
+  if (start) {
+    qsPieces.push(`start=${start}`);
+  }
+  if (end) {
+    qsPieces.push(`end=${end}`);
+  }
+  if (user) {
+    qsPieces.push(`user=${user}`);
+  }
+  if (typeof ratingMin === 'number') {
+    qsPieces.push(`ratingMin=${ratingMin}`);
+  }
+  if (typeof ratingMax === 'number') {
+    qsPieces.push(`ratingMax=${ratingMax}`);
+  }
+
+  return qsPieces.join('&');
+}
 
 const useApi = () => {
   const apiContext = useContext(ApiContext);
