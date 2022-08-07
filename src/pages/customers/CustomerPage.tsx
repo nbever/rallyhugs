@@ -4,7 +4,7 @@ import { Page } from 'layout/Page';
 import { useApi } from 'context/ApiContext';
 
 export default function CustomerPage() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const { getCustomers } = useApi();
 
   useEffect(() => {
@@ -13,10 +13,6 @@ export default function CustomerPage() {
       setData(customers);
     });
   }, []);
-
-  if (!data) {
-    return null;
-  }
 
   return (
     <Page title="Customers">

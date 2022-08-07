@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useApi } from 'context/ApiContext';
 
 export default function TagPage() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const { getTags } = useApi();
 
   useEffect(() => {
@@ -14,10 +14,6 @@ export default function TagPage() {
       setData(tags);
     });
   }, []);
-
-  if (!data) {
-    return null;
-  }
 
   return (
     <Page title="Tags">

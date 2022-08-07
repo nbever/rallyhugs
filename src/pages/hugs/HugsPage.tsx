@@ -5,7 +5,7 @@ import { useApi } from 'context/ApiContext';
 import DetailPanel from 'components/DetailPanel';
 
 export default function HugsPage() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [filters, setFilters] = useState({});
   const { getComments } = useApi();
   const getDetailPanelContent = useCallback(
@@ -22,10 +22,6 @@ export default function HugsPage() {
       setData(comments);
     });
   }, [filters]);
-
-  if (!data) {
-    return null;
-  }
 
   return (
     <Page title="Rally Hugs">

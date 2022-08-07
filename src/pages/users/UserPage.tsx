@@ -4,7 +4,7 @@ import { Page } from 'layout/Page';
 import { useApi } from 'context/ApiContext';
 
 export default function UserPage() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const { getUsers } = useApi();
 
   useEffect(() => {
@@ -13,10 +13,6 @@ export default function UserPage() {
       setData(users);
     });
   }, []);
-
-  if (!data) {
-    return null;
-  }
 
   return (
     <Page title="Users">
